@@ -622,6 +622,10 @@ end
 
 -- callback
 songs_changed = function(withAll)
+  if songwheel.allSongs == nil then
+    return
+  end
+
   local diffsById = {}
 	local diffs = {}
 	for i = 1, #songwheel.allSongs do
