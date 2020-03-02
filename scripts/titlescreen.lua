@@ -4,25 +4,33 @@ local buttonWidth = 250
 local buttonHeight = 75
 local buttonBorder = 2
 
-local label = -1
+local label = gfx.CreateLabel("unnamed_sdvx_clone", 120, 0)
 
 gfx.GradientColors(0,128,255,255,0,128,255,0)
 local gradient = gfx.LinearGradient(0,0,0,1)
 
-function is_selected(x, y, w, h)
+local buttons = {
+    "Start",
+    "Multiplayer",
+    "Settings",
+    "Exit",
+}
+
+function _is_selected(x, y, w, h)
     local mousePosX, mousePosY = game.GetMousePos()
     return mousePosX > x and mousePosY > y and mousePosX < x + w and mousePosY < y + h
 end
 
-function draw_button(name, x, y, onSelected)
+
+function _draw_button(name, x, y)
     local rx = x - (buttonWidth / 2)
     local ty = y - (buttonHeight / 2)
 
     gfx.BeginPath()
     gfx.FillColor(0,128,255)
 
-    if is_selected(rx,ty, buttonWidth, buttonHeight) then
-       selectedAction = onSelected
+    if _is_selected(rx,ty, buttonWidth, buttonHeight) then
+       selectedAction = Menu[name]
        gfx.FillColor(255,128,0)
     end
 
@@ -45,7 +53,28 @@ function draw_button(name, x, y, onSelected)
     gfx.Text(name, x, y)
 end
 
- function render(deltaTime)
+
+function _draw_title(resX, resY)
+    gfx.TextAlign(gfx.TEXT_ALIGN_CENTER + gfx.TEXT_ALIGN_MIDDLE)
+    gfx.DrawLabel(label, resX / 2, resY / 2 - 200, resX - 40)
+end
+
+
+function _draw_buttons(resX, resY)
+    local y = resY / 2
+    selectedAction = nil
+
+    gfx.LoadSkinFont("segoeui.ttf")
+
+    for i = 1, # buttons do
+        local button = buttons[i]
+        _draw_button(button, resX / 2, y)
+        y = y + 100
+    end
+end
+
+
+function render(deltaTime)
     local resx, resy = game.GetResolution()
 
     gfx.Scale(resx, resy / 3)
@@ -54,30 +83,16 @@ end
     gfx.Fill()
     gfx.ResetTransform()
     gfx.BeginPath()
-    buttonY = resy / 2
-    selectedAction = nil
-
-    gfx.LoadSkinFont("segoeui.ttf")
-
-    draw_button("Start", resx / 2, buttonY, Menu.Start)
-    buttonY = buttonY + 100
-    draw_button("Multiplayer", resx / 2, buttonY, Menu.Multiplayer)
-    buttonY = buttonY + 100
-    draw_button("Settings", resx / 2, buttonY, Menu.Settings)
-    buttonY = buttonY + 100
-    draw_button("Exit", resx / 2, buttonY, Menu.Exit)
+    
+    _draw_buttons(resx, resy)
 
     gfx.BeginPath()
     gfx.FillColor(255,255,255)
     gfx.FontSize(120)
 
-    if label == -1 then
-        label = gfx.CreateLabel("unnamed_sdvx_clone", 120, 0)
-    end
-
-    gfx.TextAlign(gfx.TEXT_ALIGN_CENTER + gfx.TEXT_ALIGN_MIDDLE)
-    gfx.DrawLabel(label, resx / 2, resy / 2 - 200, resx-40)
+    _draw_title(resx, resy)
 end
+
 
 function mouse_pressed(button)
     if selectedAction then
