@@ -26,6 +26,11 @@ for i = 1, 20 do
     selectedLevels[i] = false
 end
 
+-- force count 1 for portrait mode
+if xCount == 0 then
+    xCount = 1
+end
+
 local cachepath = path.Absolute("skins/" .. game.GetSkin() .. "/nautica.json")
 local levelcursor = 0
 local sortingcursor = 0

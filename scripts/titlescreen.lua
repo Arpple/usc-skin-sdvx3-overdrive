@@ -12,6 +12,7 @@ local gradient = gfx.LinearGradient(0,0,0,1)
 local buttons = {
     "Start",
     "Multiplayer",
+    "DLScreen",
     "Settings",
     "Exit",
 }
