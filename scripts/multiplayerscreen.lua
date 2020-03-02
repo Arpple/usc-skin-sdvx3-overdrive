@@ -552,7 +552,6 @@ function render_lobby(deltaTime)
         end
     else
         gfx.Text(selected_song.title, split/2 + song_x_off, 175)
-        draw_diffs(selected_song.all_difficulties, split/2 + song_x_off - 150, 200, 300, 100, selected_song.diff_index+1)
         
         if selected_song.jacket == nil or selected_song.jacket == placeholderJacket then
             selected_song.jacket = gfx.LoadImageJob(selected_song.jacketPath, placeholderJacket)
@@ -562,7 +561,7 @@ function render_lobby(deltaTime)
     gfx.Save()
     gfx.BeginPath()
     gfx.Translate(split/2 + song_x_off, 325+jacket_size/2)
-    gfx.ImageRect(-jacket_size/2,-jacket_size/2,jacket_size,jacket_size,jacket,1,0)
+    gfx.ImageRect(-jacket_size/2, -jacket_size - 25, jacket_size, jacket_size, jacket, 1, 0)
     
     if mouse_clipped(split/2 + song_x_off-jacket_size/2, 325, jacket_size,jacket_size) and host == user_id then
         hovered = function() 
@@ -571,6 +570,11 @@ function render_lobby(deltaTime)
         end
     end
     gfx.Restore()
+
+    if selected_song ~= nil then
+        draw_diffs(selected_song.all_difficulties, split/2 + song_x_off - 150, 415, 300, 100, selected_song.diff_index+1)
+    end
+
     if start_game_soon then
         draw_button("Game starting...", split/2 + song_x_off, 375+jacket_size, 600, function() end);
     else
